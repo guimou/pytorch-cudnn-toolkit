@@ -9,7 +9,7 @@ verify_ssl = false
 name = "pytorch"
 
 #[[source]]
-#url = "https://data.pyg.org/whl/torch-2.0.0+cu118/"
+#url = "https://data.pyg.org/whl/torch-2.0.0%2bcu118/"
 #verify_ssl = false
 #name = "torch-cluster"
 
@@ -180,11 +180,11 @@ tifffile = "*"
 tldextract = "*"
 tokenizers = "*"
 torch = {version="*", index="pytorch"}
-#torch-cluster = {file = "https://data.pyg.org/whl/torch-2.0.0%2Bcu118/torch_cluster-1.6.1%2Bpt20cu118-cp39-cp39-linux_x86_64.whl"}
-#torch-geometric = "*"
-#torch-scatter = "*"
-#torch-sparse = "*"
-#torch-spline-conv = "*"
+torch-cluster = {file = "https://data.pyg.org/whl/torch-2.0.0%2Bcu118/torch_cluster-1.6.1%2Bpt20cu118-cp39-cp39-linux_x86_64.whl"}
+torch-geometric = "*"
+torch-scatter = {file = "https://data.pyg.org/whl/torch-2.0.0%2Bcu118/torch_scatter-2.1.1%2Bpt20cu118-cp39-cp39-linux_x86_64.whl"}
+torch-sparse = {file = "https://data.pyg.org/whl/torch-2.0.0%2Bcu118/torch_sparse-0.6.17%2Bpt20cu118-cp39-cp39-linux_x86_64.whl"}
+torch-spline-conv = {file = "https://data.pyg.org/whl/torch-2.0.0%2Bcu118/torch_spline_conv-1.2.2%2Bpt20cu118-cp39-cp39-linux_x86_64.whl"}
 torchmetrics = "*"
 torchviz = "*"
 tqdm = "*"

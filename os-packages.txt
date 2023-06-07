@@ -11,7 +11,9 @@ gettext
 giflib
 gmp
 gnutls
+hdf5
 lame
+lcms2
 libffi
 libgcc
 libgfortran
@@ -19,6 +21,7 @@ libgomp
 libidn2
 libjpeg-turbo
 libpng
+libsndfile
 libtasn1
 libtiff
 libunistring
@@ -32,6 +35,7 @@ libyaml
 llvm
 llvm-devel
 lz4
+nano
 ncurses
 nettle
 openssl

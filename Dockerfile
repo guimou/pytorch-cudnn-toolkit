@@ -153,6 +153,8 @@ ENV XLA_FLAGS=--xla_gpu_cuda_data_dir=/usr/local/cuda
 # OS Packages and libraries      #
 ##################################
 
+# 1. Standard packages
+# --------------------
 # Copy packages list
 COPY os-packages.txt ./
 
@@ -163,4 +165,20 @@ RUN yum install -y yum-utils && \
     yum -y clean all --enablerepo='*' \
     && rm -rf /var/cache/yum/*
 
+# 2. ffmpeg, gstreamer,...
+# ------------------------
+# We need rpmfusion as those packages are not available in standard or epel repos
+RUN yum install -y https://download1.rpmfusion.org/free/el/rpmfusion-free-release-9.noarch.rpm && \
+    yum install -y https://download1.rpmfusion.org/nonfree/el/rpmfusion-nonfree-release-9.noarch.rpm && \
+    yum -y install ffmpeg gstreamer1 gstreamer1-libav gstreamer1-plugins-base gstreamer1-plugins-base-tools && \
+    yum -y clean all --enablerepo='*' \
+    && rm -rf /var/cache/yum/*
 
+# 3. openh264
+# -----------
+# We need a special repo as openh264 distribution is restricted
+COPY el9-cisco-openh264.repo-x86_64 /etc/yum.repos.d/el9-cisco-openh264.repo
+
+RUN yum -y install openh264 gstreamer1-plugin-openh264 && \
+    yum -y clean all --enablerepo='*' \
+    && rm -rf /var/cache/yum/*

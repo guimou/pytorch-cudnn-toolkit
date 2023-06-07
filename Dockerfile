@@ -176,9 +176,49 @@ RUN yum install -y https://download1.rpmfusion.org/free/el/rpmfusion-free-releas
 
 # 3. openh264
 # -----------
-# We need a special repo as openh264 distribution is restricted
+# We need a special repo as openh264 distribution is only done by Cisco
 COPY el9-cisco-openh264.repo-x86_64 /etc/yum.repos.d/el9-cisco-openh264.repo
 
 RUN yum -y install openh264 gstreamer1-plugin-openh264 && \
     yum -y clean all --enablerepo='*' \
     && rm -rf /var/cache/yum/*
+
+
+##################################
+# Python Packages                #
+##################################
+
+USER 1001
+
+# This will avoid people forgetting to set no-cache-dir when building images
+ENV PIP_NO_CACHE_DIR=1
+
+# Install micropipenv to deploy packages from Pipfile.lock
+RUN pip install --no-cache-dir "micropipenv[toml]"
+
+WORKDIR /opt/app-root/bin
+
+# Copy files
+COPY --chown=1001:0 utils utils/
+COPY --chown=1001:0 Pipfile.lock start-notebook.sh ./
+
+# Install packages and cleanup
+# (all commands are chained to minimize layer size)
+RUN echo "Installing softwares and packages" && \
+    # Install oc client \
+    curl -L https://mirror.openshift.com/pub/openshift-v4/x86_64/clients/ocp/stable/openshift-client-linux.tar.gz \
+        -o /tmp/openshift-client-linux.tar.gz && \
+    tar -xzvf /tmp/openshift-client-linux.tar.gz oc && \
+    rm -f /tmp/openshift-client-linux.tar.gz && \
+    # Install Python packages \
+    micropipenv install && \
+    rm -f ./Pipfile.lock && \
+    # Fix Kernel name with the exact Python version \
+    sed -i -e "s/Python.*/$(python --version)\",/" /opt/app-root/share/jupyter/kernels/python3/kernel.json && \
+    # Fix permissions to support pip in Openshift environments \
+    chmod -R g+w /opt/app-root/lib/python3.9/site-packages && \
+    fix-permissions /opt/app-root -P
+
+WORKDIR /opt/app-root/src
+
+ENTRYPOINT ["start-notebook.sh"]
